@@ -1,0 +1,7 @@
+/obj/
+/lib/
+/alire/
+/config/
+.idea
+/tests/obj/
+/tests/bin/
