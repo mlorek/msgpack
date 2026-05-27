@@ -1,4 +1,4 @@
-# ada_msg_pack
+# msg_pack for Ada
 
 An Ada 2012 implementation of [MessagePack](https://github.com/msgpack/msgpack/blob/master/spec.md) serialization, packaged as an Alire library crate.
 
