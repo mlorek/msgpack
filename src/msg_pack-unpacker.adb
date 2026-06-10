@@ -1,7 +1,7 @@
 with Interfaces;          use Interfaces;
 with Ada.Unchecked_Conversion;
 
-package body Ada_Msg_Pack.Unpacker is
+package body Msg_Pack.Unpacker is
 
    function To_Float is new
      Ada.Unchecked_Conversion (Unsigned_32, IEEE_Float_32);
@@ -11,6 +11,20 @@ package body Ada_Msg_Pack.Unpacker is
      Ada.Unchecked_Conversion (Unsigned_64, Integer_64);
    function To_Int8 is new
      Ada.Unchecked_Conversion (Unsigned_8, Integer_8);
+
+   procedure Require
+     (Data : Byte_Array; Position : Positive; Count : Natural);
+   pragma Inline (Require);
+
+   function Read_U8
+     (Data : Byte_Array; Position : in out Positive) return Unsigned_8;
+   function Read_U16_BE
+     (Data : Byte_Array; Position : in out Positive) return Unsigned_16;
+   function Read_U32_BE
+     (Data : Byte_Array; Position : in out Positive) return Unsigned_32;
+   function Read_U64_BE
+     (Data : Byte_Array; Position : in out Positive) return Unsigned_64;
+   pragma Inline (Read_U8, Read_U16_BE, Read_U32_BE, Read_U64_BE);
 
    procedure Require
      (Data : Byte_Array; Position : Positive; Count : Natural) is
@@ -272,11 +286,9 @@ package body Ada_Msg_Pack.Unpacker is
    begin
       Require (Data, Position, Len);
       declare
-         Result : Byte_Array (1 .. Len);
+         Result : constant Byte_Array :=
+           Data (Position .. Position + Len - 1);
       begin
-         for I in 1 .. Len loop
-            Result (I) := Data (Position + I - 1);
-         end loop;
          Position := Position + Len;
          return Result;
       end;
@@ -316,9 +328,9 @@ package body Ada_Msg_Pack.Unpacker is
          Result : Extension (Length => Len);
       begin
          Result.Ext_Type := T;
-         for I in 1 .. Len loop
-            Result.Payload (I) := Data (Position + I - 1);
-         end loop;
+         if Len > 0 then
+            Result.Payload := Data (Position .. Position + Len - 1);
+         end if;
          Position := Position + Len;
          return Result;
       end;
@@ -354,4 +366,4 @@ package body Ada_Msg_Pack.Unpacker is
       end case;
    end Unpack_Map_Header;
 
-end Ada_Msg_Pack.Unpacker;
+end Msg_Pack.Unpacker;

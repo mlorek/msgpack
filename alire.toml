@@ -1,4 +1,4 @@
-name = "ada_msg_pack"
+name = "msg_pack"
 description = "Ada implementation of MessagePack serialization"
 version = "0.1.0"
 
@@ -6,8 +6,12 @@ authors = ["mlorek"]
 maintainers = ["MLorek <michal.lorek@gmail.com>"]
 maintainers-logins = ["mlorek"]
 licenses = "MIT"
-website = "https://github.com/mlorek/ada-msgpack"
-tags = ["serialization", "msgpack", "messagepack"]
+website = "https://github.com/mlorek/msgpack"
+tags = ["serialization", "msgpack", "messagepack", "msg-pack"]
+
+[[actions]]
+type = "test"
+command = ["alr", "build"]
 
 [[actions]]
 type = "test"

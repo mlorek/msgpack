@@ -1,7 +1,7 @@
 with Interfaces;
 with Ada.Containers.Vectors;
 
-package Ada_Msg_Pack is
+package Msg_Pack is
 
    subtype Byte is Interfaces.Unsigned_8;
    use type Interfaces.Unsigned_8;
@@ -18,4 +18,4 @@ package Ada_Msg_Pack is
 
    Format_Error : exception;
 
-end Ada_Msg_Pack;
+end Msg_Pack;

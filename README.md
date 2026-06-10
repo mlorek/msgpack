@@ -14,7 +14,7 @@ Covers the full base spec: nil, bool, signed/unsigned int (smallest-fit), float3
 alr build
 ```
 
-Produces the static library at `lib/libAda_Msg_Pack.a` and the compiled units under `obj/<build-profile>/`.
+Produces the static library at `lib/libMsg_Pack.a` and the compiled units under `obj/<build-profile>/`.
 
 ## Build and run the tests
 
@@ -27,6 +27,7 @@ alr test                                     # builds tests + runs them
 `alr test` invokes the `[[actions]]` of type `"test"` declared in `alire.toml`. The runner exits non-zero on any failure, so it's CI-friendly. To do the same thing manually:
 
 ```bash
+alr build                                    # generates config/msg_pack_config.gpr
 alr exec -- gprbuild -p -P tests/tests.gpr   # build the test binary
 ./tests/bin/test_main                        # run it
 ```
@@ -37,38 +38,28 @@ Expected tail of the output:
 All tests passed.
 ```
 
-## Build everything in one shot
-
-The aggregate project `ada_msg_pack_all.gpr` bundles both:
-
-```bash
-alr exec -- gprbuild -p -P ada_msg_pack_all.gpr
-```
-
-This is also what IDEs (GNAT Studio, VS Code) should open so they see both source trees.
-
 ## Use the library from your own crate
 
-Add `ada_msg_pack` as a dependency and `with` it:
+Add `msg_pack` as a dependency and `with` it:
 
 ```ada
-with Ada_Msg_Pack;          use Ada_Msg_Pack;
-with Ada_Msg_Pack.Packer;
-with Ada_Msg_Pack.Unpacker;
+with Msg_Pack;          use Msg_Pack;
+with Msg_Pack.Packer;
+with Msg_Pack.Unpacker;
 
 procedure Example is
    Buf : Byte_Vector;
    Pos : Positive := 1;
 begin
-   Ada_Msg_Pack.Packer.Pack_String  (Buf, "hello");
-   Ada_Msg_Pack.Packer.Pack_Integer (Buf, 42);
+   Msg_Pack.Packer.Pack_String  (Buf, "hello");
+   Msg_Pack.Packer.Pack_Integer (Buf, 42);
 
    declare
       Bytes : constant Byte_Array := To_Byte_Array (Buf);
       S     : constant String     :=
-        Ada_Msg_Pack.Unpacker.Unpack_String (Bytes, Pos);
+        Msg_Pack.Unpacker.Unpack_String (Bytes, Pos);
       N     : constant Interfaces.Integer_64 :=
-        Ada_Msg_Pack.Unpacker.Unpack_Integer (Bytes, Pos);
+        Msg_Pack.Unpacker.Unpack_Integer (Bytes, Pos);
    begin
       --  S = "hello", N = 42
       null;

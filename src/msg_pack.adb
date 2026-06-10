@@ -1,4 +1,4 @@
-package body Ada_Msg_Pack is
+package body Msg_Pack is
 
    function To_Byte_Array (V : Byte_Vector) return Byte_Array is
       Result : Byte_Array (1 .. Natural (V.Length));
@@ -11,4 +11,4 @@ package body Ada_Msg_Pack is
       return Result;
    end To_Byte_Array;
 
-end Ada_Msg_Pack;
+end Msg_Pack;

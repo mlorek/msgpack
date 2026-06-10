@@ -1,21 +1,21 @@
-with "config/ada_msg_pack_config.gpr";
-project Ada_Msg_Pack is
+with "config/msg_pack_config.gpr";
+project Msg_Pack is
 
-   for Library_Name use "Ada_Msg_Pack";
-   for Library_Version use Project'Library_Name & ".so." & Ada_Msg_Pack_Config.Crate_Version;
+   for Library_Name use "Msg_Pack";
+   for Library_Version use Project'Library_Name & ".so." & Msg_Pack_Config.Crate_Version;
 
    for Source_Dirs use ("src/", "config/");
-   for Object_Dir use "obj/" & Ada_Msg_Pack_Config.Build_Profile;
+   for Object_Dir use "obj/" & Msg_Pack_Config.Build_Profile;
    for Create_Missing_Dirs use "True";
    for Library_Dir use "lib";
 
    type Library_Type_Type is ("relocatable", "static", "static-pic");
    Library_Type : Library_Type_Type :=
-     external ("ADA_MSG_PACK_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+     external ("MSG_PACK_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
    for Library_Kind use Library_Type;
 
    package Compiler is
-      for Default_Switches ("Ada") use Ada_Msg_Pack_Config.Ada_Compiler_Switches;
+      for Default_Switches ("Ada") use Msg_Pack_Config.Ada_Compiler_Switches;
    end Compiler;
 
    package Binder is
@@ -26,4 +26,4 @@ project Ada_Msg_Pack is
       for Artifacts (".") use ("share");
    end Install;
 
-end Ada_Msg_Pack;
+end Msg_Pack;

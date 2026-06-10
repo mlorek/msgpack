@@ -1,4 +1,4 @@
-with "../ada_msg_pack.gpr";
+with "../msg_pack.gpr";
 
 project Tests is
 

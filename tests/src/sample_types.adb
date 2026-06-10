@@ -1,12 +1,11 @@
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
-with Ada.Containers;             use Ada.Containers;
 with Interfaces;                 use Interfaces;
-with Ada_Msg_Pack.Packer;
-with Ada_Msg_Pack.Unpacker;
+with Msg_Pack.Packer;
+with Msg_Pack.Unpacker;
 
 package body Sample_Types is
 
-   use Ada_Msg_Pack;
+   use Msg_Pack;
 
    procedure Pack
      (Buffer : in out Byte_Vector;
@@ -43,20 +42,11 @@ package body Sample_Types is
    end Unpack_Point;
 
    function "=" (L, R : Person) return Boolean is
-      use String_Vectors;
+      use type String_Vectors.Vector;
    begin
-      if L.Name /= R.Name or L.Age /= R.Age then
-         return False;
-      end if;
-      if L.Tags.Length /= R.Tags.Length then
-         return False;
-      end if;
-      for I in 1 .. Natural (L.Tags.Length) loop
-         if L.Tags.Element (I) /= R.Tags.Element (I) then
-            return False;
-         end if;
-      end loop;
-      return True;
+      return L.Name = R.Name
+        and then L.Age = R.Age
+        and then L.Tags = R.Tags;
    end "=";
 
    procedure Pack

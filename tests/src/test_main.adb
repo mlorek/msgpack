@@ -2,9 +2,9 @@ with Ada.Text_IO;          use Ada.Text_IO;
 with Ada.Command_Line;
 with Interfaces;           use Interfaces;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with Ada_Msg_Pack;         use Ada_Msg_Pack;
-with Ada_Msg_Pack.Packer;
-with Ada_Msg_Pack.Unpacker;
+with Msg_Pack;         use Msg_Pack;
+with Msg_Pack.Packer;
+with Msg_Pack.Unpacker;
 with Sample_Types;
 
 procedure Test_Main is
@@ -25,11 +25,11 @@ procedure Test_Main is
       B   : Byte_Vector;
       Pos : Positive := 1;
    begin
-      Ada_Msg_Pack.Packer.Pack_Integer (B, V);
+      Msg_Pack.Packer.Pack_Integer (B, V);
       declare
          Arr : constant Byte_Array := To_Byte_Array (B);
          R   : constant Integer_64 :=
-           Ada_Msg_Pack.Unpacker.Unpack_Integer (Arr, Pos);
+           Msg_Pack.Unpacker.Unpack_Integer (Arr, Pos);
       begin
          Check (Label, R = V and Pos = Arr'Length + 1);
       end;
@@ -60,16 +60,16 @@ procedure Test_Main is
       P   : Positive := 1;
    begin
       Put_Line ("booleans and nil:");
-      Ada_Msg_Pack.Packer.Pack_Nil (Buf);
-      Ada_Msg_Pack.Packer.Pack_Boolean (Buf, True);
-      Ada_Msg_Pack.Packer.Pack_Boolean (Buf, False);
+      Msg_Pack.Packer.Pack_Nil (Buf);
+      Msg_Pack.Packer.Pack_Boolean (Buf, True);
+      Msg_Pack.Packer.Pack_Boolean (Buf, False);
       declare
          Arr : constant Byte_Array := To_Byte_Array (Buf);
          B1, B2 : Boolean;
       begin
-         Ada_Msg_Pack.Unpacker.Unpack_Nil (Arr, P);
-         B1 := Ada_Msg_Pack.Unpacker.Unpack_Boolean (Arr, P);
-         B2 := Ada_Msg_Pack.Unpacker.Unpack_Boolean (Arr, P);
+         Msg_Pack.Unpacker.Unpack_Nil (Arr, P);
+         B1 := Msg_Pack.Unpacker.Unpack_Boolean (Arr, P);
+         B2 := Msg_Pack.Unpacker.Unpack_Boolean (Arr, P);
          Check ("nil byte",   Arr (1) = 16#C0#);
          Check ("true byte",  Arr (2) = 16#C3#);
          Check ("false byte", Arr (3) = 16#C2#);
@@ -83,14 +83,14 @@ procedure Test_Main is
       P   : Positive := 1;
    begin
       Put_Line ("floats:");
-      Ada_Msg_Pack.Packer.Pack_Float  (Buf, 1.5);
-      Ada_Msg_Pack.Packer.Pack_Double (Buf, 3.141592653589793);
+      Msg_Pack.Packer.Pack_Float  (Buf, 1.5);
+      Msg_Pack.Packer.Pack_Double (Buf, 3.141592653589793);
       declare
          Arr : constant Byte_Array := To_Byte_Array (Buf);
          F   : constant IEEE_Float_32 :=
-           Ada_Msg_Pack.Unpacker.Unpack_Float (Arr, P);
+           Msg_Pack.Unpacker.Unpack_Float (Arr, P);
          D   : constant IEEE_Float_64 :=
-           Ada_Msg_Pack.Unpacker.Unpack_Double (Arr, P);
+           Msg_Pack.Unpacker.Unpack_Double (Arr, P);
       begin
          Check ("float32 round-trip", F = 1.5);
          Check ("float64 round-trip", D = 3.141592653589793);
@@ -103,14 +103,14 @@ procedure Test_Main is
       Bin : constant Byte_Array := (16#DE#, 16#AD#, 16#BE#, 16#EF#);
    begin
       Put_Line ("string and binary:");
-      Ada_Msg_Pack.Packer.Pack_String (Buf, "hello");
-      Ada_Msg_Pack.Packer.Pack_String (Buf, (1 .. 40 => 'x'));
-      Ada_Msg_Pack.Packer.Pack_Binary (Buf, Bin);
+      Msg_Pack.Packer.Pack_String (Buf, "hello");
+      Msg_Pack.Packer.Pack_String (Buf, (1 .. 40 => 'x'));
+      Msg_Pack.Packer.Pack_Binary (Buf, Bin);
       declare
          Arr : constant Byte_Array := To_Byte_Array (Buf);
-         S1  : constant String     := Ada_Msg_Pack.Unpacker.Unpack_String (Arr, P);
-         S2  : constant String     := Ada_Msg_Pack.Unpacker.Unpack_String (Arr, P);
-         B   : constant Byte_Array := Ada_Msg_Pack.Unpacker.Unpack_Binary (Arr, P);
+         S1  : constant String     := Msg_Pack.Unpacker.Unpack_String (Arr, P);
+         S2  : constant String     := Msg_Pack.Unpacker.Unpack_String (Arr, P);
+         B   : constant Byte_Array := Msg_Pack.Unpacker.Unpack_Binary (Arr, P);
       begin
          Check ("fixstr round-trip", S1 = "hello");
          Check ("str8 round-trip",   S2'Length = 40 and then S2 = (1 .. 40 => 'x'));
@@ -126,11 +126,11 @@ procedure Test_Main is
       Buf : Byte_Vector;
       P   : Positive := 1;
    begin
-      Ada_Msg_Pack.Packer.Pack_Extension (Buf, Ext_Type, Payload);
+      Msg_Pack.Packer.Pack_Extension (Buf, Ext_Type, Payload);
       declare
          Arr : constant Byte_Array := To_Byte_Array (Buf);
-         R   : constant Ada_Msg_Pack.Unpacker.Extension :=
-           Ada_Msg_Pack.Unpacker.Unpack_Extension (Arr, P);
+         R   : constant Msg_Pack.Unpacker.Extension :=
+           Msg_Pack.Unpacker.Unpack_Extension (Arr, P);
       begin
          Check (Label,
                 R.Ext_Type = Ext_Type
@@ -164,7 +164,7 @@ procedure Test_Main is
       Round_Trip_Extension (42,  P_E8,  "ext8");
       Round_Trip_Extension (-42, P_E16, "ext16");
 
-      Ada_Msg_Pack.Packer.Pack_Extension (Buf, 7, P4);
+      Msg_Pack.Packer.Pack_Extension (Buf, 7, P4);
       declare
          Arr : constant Byte_Array := To_Byte_Array (Buf);
       begin
@@ -175,7 +175,7 @@ procedure Test_Main is
       declare
          Buf2 : Byte_Vector;
       begin
-         Ada_Msg_Pack.Packer.Pack_Extension (Buf2, -1, P3);
+         Msg_Pack.Packer.Pack_Extension (Buf2, -1, P3);
          Check ("ext8 header byte", Buf2.Element (1) = 16#C7#);
          Check ("ext8 length byte", Buf2.Element (2) = 16#03#);
          Check ("ext8 type byte (-1 sign-encoded)",
@@ -185,10 +185,10 @@ procedure Test_Main is
       declare
          Peek_Buf : Byte_Vector;
       begin
-         Ada_Msg_Pack.Packer.Pack_Extension (Peek_Buf, 1, P1);
+         Msg_Pack.Packer.Pack_Extension (Peek_Buf, 1, P1);
          declare
             Arr : constant Byte_Array := To_Byte_Array (Peek_Buf);
-            use Ada_Msg_Pack.Unpacker;
+            use Msg_Pack.Unpacker;
          begin
             Check ("Peek_Kind on extension",
                    Peek_Kind (Arr, 1) = Kind_Extension);
@@ -268,13 +268,13 @@ procedure Test_Main is
          Buf : Byte_Vector;
          Pos : Positive := 1;
       begin
-         Ada_Msg_Pack.Packer.Pack_Array_Header (Buf, 2);
+         Msg_Pack.Packer.Pack_Array_Header (Buf, 2);
          Pack (Buf, A);
          Pack (Buf, B);
          declare
             Arr : constant Byte_Array := To_Byte_Array (Buf);
             N   : constant Natural :=
-              Ada_Msg_Pack.Unpacker.Unpack_Array_Header (Arr, Pos);
+              Msg_Pack.Unpacker.Unpack_Array_Header (Arr, Pos);
             R1  : constant Point := Unpack_Point (Arr, Pos);
             R2  : constant Point := Unpack_Point (Arr, Pos);
          begin
@@ -290,40 +290,40 @@ procedure Test_Main is
       P   : Positive := 1;
    begin
       Put_Line ("array and map:");
-      Ada_Msg_Pack.Packer.Pack_Array_Header (Buf, 3);
-      Ada_Msg_Pack.Packer.Pack_Integer      (Buf, 10);
-      Ada_Msg_Pack.Packer.Pack_String       (Buf, "two");
-      Ada_Msg_Pack.Packer.Pack_Boolean      (Buf, True);
+      Msg_Pack.Packer.Pack_Array_Header (Buf, 3);
+      Msg_Pack.Packer.Pack_Integer      (Buf, 10);
+      Msg_Pack.Packer.Pack_String       (Buf, "two");
+      Msg_Pack.Packer.Pack_Boolean      (Buf, True);
 
-      Ada_Msg_Pack.Packer.Pack_Map_Header   (Buf, 1);
-      Ada_Msg_Pack.Packer.Pack_String       (Buf, "k");
-      Ada_Msg_Pack.Packer.Pack_Integer      (Buf, 42);
+      Msg_Pack.Packer.Pack_Map_Header   (Buf, 1);
+      Msg_Pack.Packer.Pack_String       (Buf, "k");
+      Msg_Pack.Packer.Pack_Integer      (Buf, 42);
 
       declare
          Arr   : constant Byte_Array := To_Byte_Array (Buf);
          N_Arr : constant Natural :=
-           Ada_Msg_Pack.Unpacker.Unpack_Array_Header (Arr, P);
+           Msg_Pack.Unpacker.Unpack_Array_Header (Arr, P);
       begin
          Check ("array header length", N_Arr = 3);
          Check ("array elem 0",
-                Ada_Msg_Pack.Unpacker.Unpack_Integer (Arr, P) = 10);
+                Msg_Pack.Unpacker.Unpack_Integer (Arr, P) = 10);
          declare
             S : constant String :=
-              Ada_Msg_Pack.Unpacker.Unpack_String (Arr, P);
+              Msg_Pack.Unpacker.Unpack_String (Arr, P);
          begin
             Check ("array elem 1", S = "two");
          end;
          Check ("array elem 2",
-                Ada_Msg_Pack.Unpacker.Unpack_Boolean (Arr, P));
+                Msg_Pack.Unpacker.Unpack_Boolean (Arr, P));
          declare
             N_Map : constant Natural :=
-              Ada_Msg_Pack.Unpacker.Unpack_Map_Header (Arr, P);
+              Msg_Pack.Unpacker.Unpack_Map_Header (Arr, P);
          begin
             Check ("map header length", N_Map = 1);
          end;
          declare
-            K : constant String     := Ada_Msg_Pack.Unpacker.Unpack_String  (Arr, P);
-            V : constant Integer_64 := Ada_Msg_Pack.Unpacker.Unpack_Integer (Arr, P);
+            K : constant String     := Msg_Pack.Unpacker.Unpack_String  (Arr, P);
+            V : constant Integer_64 := Msg_Pack.Unpacker.Unpack_Integer (Arr, P);
          begin
             Check ("map key",   K = "k");
             Check ("map value", V = 42);

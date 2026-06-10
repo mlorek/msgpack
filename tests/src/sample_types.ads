@@ -1,7 +1,7 @@
 with Ada.Strings.Unbounded;
 with Ada.Containers.Vectors;
 with Interfaces;
-with Ada_Msg_Pack;
+with Msg_Pack;
 
 package Sample_Types is
 
@@ -12,11 +12,11 @@ package Sample_Types is
    end record;
 
    procedure Pack
-     (Buffer : in out Ada_Msg_Pack.Byte_Vector;
+     (Buffer : in out Msg_Pack.Byte_Vector;
       Value  : Point);
 
    function Unpack_Point
-     (Data     : Ada_Msg_Pack.Byte_Array;
+     (Data     : Msg_Pack.Byte_Array;
       Position : in out Positive) return Point;
 
    --  Person: a record with a string, integer, and string vector,
@@ -35,11 +35,11 @@ package Sample_Types is
    function "=" (L, R : Person) return Boolean;
 
    procedure Pack
-     (Buffer : in out Ada_Msg_Pack.Byte_Vector;
+     (Buffer : in out Msg_Pack.Byte_Vector;
       Value  : Person);
 
    function Unpack_Person
-     (Data     : Ada_Msg_Pack.Byte_Array;
+     (Data     : Msg_Pack.Byte_Array;
       Position : in out Positive) return Person;
 
 end Sample_Types;

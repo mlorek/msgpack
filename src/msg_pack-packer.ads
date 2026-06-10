@@ -1,6 +1,6 @@
 with Interfaces;
 
-package Ada_Msg_Pack.Packer is
+package Msg_Pack.Packer is
 
    procedure Pack_Nil
      (Buffer : in out Byte_Vector);
@@ -46,4 +46,4 @@ package Ada_Msg_Pack.Packer is
      (Buffer : in out Byte_Vector;
       Length : Natural);
 
-end Ada_Msg_Pack.Packer;
+end Msg_Pack.Packer;

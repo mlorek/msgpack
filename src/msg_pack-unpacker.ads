@@ -1,6 +1,6 @@
 with Interfaces;
 
-package Ada_Msg_Pack.Unpacker is
+package Msg_Pack.Unpacker is
 
    type Msg_Kind is
      (Kind_Nil,
@@ -60,4 +60,4 @@ package Ada_Msg_Pack.Unpacker is
    function Unpack_Map_Header
      (Data : Byte_Array; Position : in out Positive) return Natural;
 
-end Ada_Msg_Pack.Unpacker;
+end Msg_Pack.Unpacker;
