@@ -43,6 +43,8 @@ All tests passed.
 Add `msg_pack` as a dependency and `with` it:
 
 ```ada
+with Ada.Text_IO;
+with Interfaces;
 with Msg_Pack;          use Msg_Pack;
 with Msg_Pack.Packer;
 with Msg_Pack.Unpacker;
@@ -61,8 +63,7 @@ begin
       N     : constant Interfaces.Integer_64 :=
         Msg_Pack.Unpacker.Unpack_Integer (Bytes, Pos);
    begin
-      --  S = "hello", N = 42
-      null;
+      Ada.Text_IO.Put_Line (S & Interfaces.Integer_64'Image (N));  --  hello 42
    end;
 end Example;
 ```
